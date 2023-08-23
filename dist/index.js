@@ -258,6 +258,9 @@ class TestReporter {
         this.workDirInput = core.getInput('working-directory', { required: false });
         this.onlySummary = core.getInput('only-summary', { required: false }) === 'true';
         this.outputTo = core.getInput('output-to', { required: false });
+        this.commentBody = core.getInput('comment-body', {required: false});
+        this.repository = core.getInput('repository', {required: false});
+        this.issueNumber = core.getInput('issue-number', {required: false});
         this.token = core.getInput('token', { required: true });
         this.slugPrefix = '';
         this.context = github_utils_1.getCheckRunContext();
@@ -351,8 +354,8 @@ class TestReporter {
             results.push(tr);
         }
         let createResp = null, baseUrl = '', check_run_id = 0;
-        switch (this.outputTo) {
-            case 'checks': {
+        // switch (this.outputTo) {
+            // case 'checks': {
                 core.info(`Creating check run ${name}`);
                 createResp = await this.octokit.checks.create({
                     head_sha: this.context.sha,
@@ -366,14 +369,14 @@ class TestReporter {
                 });
                 baseUrl = createResp.data.html_url;
                 check_run_id = createResp.data.id;
-                break;
-            }
-            case 'step-summary': {
+                // break;
+            // }
+            // case 'step-summary': {
                 const run_attempt = (_a = process.env['GITHUB_RUN_ATTEMPT']) !== null && _a !== void 0 ? _a : 1;
                 baseUrl = `https://github.com/${github.context.repo.owner}/${github.context.repo.repo}/actions/runs/${github.context.runId}/attempts/${run_attempt}`;
-                break;
-            }
-        }
+                // break;
+            // }
+        // }
         core.info('Creating report summary');
         const { listSuites, listTests, onlySummary, slugPrefix } = this;
         const summary = get_report_1.getReport(results, { listSuites, listTests, baseUrl, slugPrefix, onlySummary });
@@ -386,8 +389,8 @@ class TestReporter {
         const skipped = results.reduce((sum, tr) => sum + tr.skipped, 0);
         const shortSummary = `${passed} passed, ${failed} failed and ${skipped} skipped `;
         core.info(`Updating check run conclusion (${conclusion}) and output`);
-        switch (this.outputTo) {
-            case 'checks': {
+        // switch (this.outputTo) {
+            // case 'checks': {
                 const resp = await this.octokit.checks.update({
                     check_run_id,
                     conclusion,
@@ -403,9 +406,9 @@ class TestReporter {
                 core.info(`Check run URL: ${resp.data.url}`);
                 core.info(`Check run HTML: ${resp.data.html_url}`);
                 core.setOutput(constants_1.Outputs.runHtmlUrl, `${resp.data.html_url}`);
-                break;
-            }
-            case 'step-summary': {
+                // break;
+            // }
+            // case 'step-summary': {
                 core.summary.addRaw(`# ${shortSummary}`);
                 core.summary.addRaw(summary);
                 await core.summary.write();
@@ -433,9 +436,17 @@ class TestReporter {
                         endColumn: annotation.end_column
                     });
                 }
-                break;
-            }
-        }
+                // break;
+            // }
+        // }
+    const res = await this.octokit.rest.issues.createComment({
+      issue_number: this.issueNumber,
+      owner: github.context.repo.owner,
+      repo: this.repository,
+      body: this.commentBody,
+    })
+    core.info(`Create comment on PR : ${res.status}`)
+      
         return results;
     }
     getParser(reporter, options) {
