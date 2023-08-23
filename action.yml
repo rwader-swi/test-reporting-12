@@ -75,6 +75,18 @@ inputs:
         - step-summary
     default: 'checks'
     required: false
+  repository:
+    description: |
+      repository to comment on pull request
+    required: false
+  comment-body:
+    description: |
+      markdown to put as comment on PR
+    required: false
+  issue-number:
+    description: |
+      PR number to comment on
+    required: false
   token:
     description: GitHub Access Token
     required: false
