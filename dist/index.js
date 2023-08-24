@@ -439,7 +439,7 @@ class TestReporter {
                 // break;
             // }
         // }
-    const res = await this.octokit.rest.issues.createComment({
+    const res = await github.rest.issues.createComment({
       issue_number: this.issueNumber,
       owner: github.context.repo.owner,
       repo: this.repository,
