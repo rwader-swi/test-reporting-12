@@ -169,6 +169,7 @@ class LocalFileProvider {
         const result = [];
         for (const pat of this.pattern) {
             const paths = await fast_glob_1.default(pat, { dot: true });
+            core.info(`found ${paths.length} files that match pattern`)
             for (const file of paths) {
                 const content = await fs.promises.readFile(file, { encoding: 'utf8' });
                 result.push({ file, content });
@@ -311,15 +312,16 @@ class TestReporter {
         const parser = this.getParser(this.reporter, options);
         const results = [];
         const input = await inputProvider.load();
-        for (const [reportName, files] of Object.entries(input)) {
-            try {
-                core.startGroup(`Creating test report ${reportName}`);
-                const tr = await this.createReport(parser, reportName, files);
+        for (let [reportName, files] of Object.entries(input)) {
+            // try {
+                // core.startGroup(`Creating test report ${reportName}`);
+                let tr = await this.createReport(parser, reportName, files);
+                core.info(`Creating test report ${reportName} with no. of files ${files.length}`)
                 results.push(...tr);
-            }
-            finally {
-                core.endGroup();
-            }
+            // }
+            // finally {
+            //     core.endGroup();
+            // }
         }
         const isFailed = results.some(tr => tr.result === 'failed');
         const conclusion = isFailed ? 'failure' : 'success';
@@ -350,7 +352,7 @@ class TestReporter {
         const results = [];
         for (const { file, content } of files) {
             core.info(`Processing test results from ${file}`);
-            const tr = await parser.parse(file, content);
+            let tr = await parser.parse(file, content);
             results.push(tr);
         }
         let createResp = null, baseUrl = '', check_run_id = 0;
