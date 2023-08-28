@@ -169,6 +169,7 @@ class LocalFileProvider {
         const result = [];
         for (const pat of this.pattern) {
             const paths = await fast_glob_1.default(pat, { dot: true });
+          
             for (const file of paths) {
                 const content = await fs.promises.readFile(file, { encoding: 'utf8' });
                 result.push({ file, content });
@@ -176,6 +177,14 @@ class LocalFileProvider {
         }
         return { [this.name]: result };
     }
+  async load2(){
+            const p = [];
+        for (const pat of this.pattern) {
+            const paths = await fast_glob_1.default(pat, { dot: true });
+          p.push(paths);
+        }
+    return p;
+  }
     async listTrackedFiles() {
         return git_1.listFiles();
     }
@@ -311,6 +320,8 @@ class TestReporter {
         const parser = this.getParser(this.reporter, options);
         const results = [];
         const input = await inputProvider.load();
+        const input2 = await inputProvider.load2();
+      core.info(`*****All ur matching paths ${input2}`)
         for (let [reportName, files] of Object.entries(input)) {
             // try {
                 // core.startGroup(`Creating test report ${reportName}`);
