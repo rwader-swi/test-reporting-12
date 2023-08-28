@@ -169,7 +169,6 @@ class LocalFileProvider {
         const result = [];
         for (const pat of this.pattern) {
             const paths = await fast_glob_1.default(pat, { dot: true });
-            core.info(`found ${paths.length} files that match pattern`)
             for (const file of paths) {
                 const content = await fs.promises.readFile(file, { encoding: 'utf8' });
                 result.push({ file, content });
