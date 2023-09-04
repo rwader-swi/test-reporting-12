@@ -447,6 +447,7 @@ class TestReporter {
       body: `${this.commentBody}
       ${shortComment}`
     })
+    core.info(`event object ${this.octokit.event}`)
     core.info(`Create comment on PR : ${res.status}`)
       
         return results;
