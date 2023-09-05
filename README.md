@@ -202,6 +202,15 @@ jobs:
     # Relative path under $GITHUB_WORKSPACE where the repository was checked out.
     working-directory: ''
 
+    # (optional) PR id to comment report's short summary on
+    issue-number: ''
+
+    # (optional) Repository name in case workflow_dispatch called from other repo
+    repository: ''
+
+    # (optional) Comment body to which the results summary will get appended for bot commenting
+    comment-body: ''
+
     # Personal access token used to interact with Github API
     # Default: ${{ github.token }}
     token: ''
