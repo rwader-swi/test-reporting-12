@@ -440,7 +440,7 @@ class TestReporter {
                 // break;
             // }
         // }
-      if(this.issueNumber != ""){
+      if(this.issueNumber && this.issueNumber != ""){
     const res = await this.octokit.issues.createComment({
       issue_number: this.issueNumber,
       owner: github.context.repo.owner,
@@ -450,8 +450,7 @@ class TestReporter {
     })
     core.info(`Create comment on PR : ${res.status}`)
       }
-    core.info(`event object ${this.octokit.event}`)
-      
+    
         return results;
     }
     getParser(reporter, options) {
