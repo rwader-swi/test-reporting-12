@@ -1,0 +1,16 @@
+name: oncommit
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+jobs:
+  sample:
+    name: sample
+    runs-on: ubuntu-latest
+    steps:
+      - name: log event schedule
+        uses: actions/github-script@v6
+        with:
+          script: |
+            console.log("${{ github.event.schedule }}")
+        
