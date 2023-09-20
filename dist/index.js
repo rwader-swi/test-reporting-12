@@ -441,6 +441,7 @@ class TestReporter {
             // }
         // }
       if(this.issueNumber && this.issueNumber != ""){
+        core.info(`owner: ${github.context.repo.owner} issue number ${this.issueNumber} repo ${ this.repository}`)
     const res = await this.octokit.issues.createComment({
       issue_number: this.issueNumber,
       owner: github.context.repo.owner,
