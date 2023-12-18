@@ -388,8 +388,8 @@ class TestReporter {
         const failed = results.reduce((sum, tr) => sum + tr.failed, 0);
         const skipped = results.reduce((sum, tr) => sum + tr.skipped, 0);
         const shortSummary = `${passed} passed, ${failed} failed and ${skipped} skipped `;
-        const shortComment = `[results](${baseUrl})  ${passed} :white_check_mark:     ${skipped} :zzz:     ${failed} :x:`;
-        core.info(`Updating check run conclusion (${conclusion}) and output`);
+        const shortComment = `[results](${baseUrl})  ${passed} ✅    ${skipped} 💤    ${failed} ❌`;
+        core.info(`Updating check run conclusion (${conclusion}) and output`); 
         // switch (this.outputTo) {
             // case 'checks': {
                 const resp = await this.octokit.checks.update({
