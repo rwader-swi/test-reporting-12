@@ -108,7 +108,7 @@ outputs:
   runHtmlUrl:
     description: Exposes the URL for the HTML version of the run report
   summary:
-    dsecription: Summary to attach in run, if anyone wants to modify in their repo
+    description: Summary to attach in run, if anyone wants to modify in their repo
 runs:
   using: 'node20'
   main: 'dist/index.js'
