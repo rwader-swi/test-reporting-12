@@ -108,7 +108,7 @@ outputs:
   runHtmlUrl:
     description: Exposes the URL for the HTML version of the run report
 runs:
-  using: 'node20'
+  using: 'node16'
   main: 'dist/index.js'
 branding:
   color: blue
