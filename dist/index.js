@@ -407,6 +407,7 @@ class TestReporter {
                 core.info(`Check run URL: ${resp.data.url}`);
                 core.info(`Check run HTML: ${resp.data.html_url}`);
                 core.setOutput(constants_1.Outputs.runHtmlUrl, `${resp.data.html_url}`);
+                core.setOutput('summary', summary)
                 // break;
             // }
             // case 'step-summary': {
