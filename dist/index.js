@@ -1525,8 +1525,8 @@ function getAnnotations(results, maxCount) {
                 testName: ts.name,
                 details: localerr.join('\n'),
                 message: localerr.join('\n') || 'Test failed',
-                // path,
-                // line
+                path: tr.path,
+                line: ts.groups[0].tests[0].error.line
             });
         }
     }
