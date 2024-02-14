@@ -1499,6 +1499,7 @@ function getAnnotations(results, maxCount) {
     const mergeDup = results.length > 1;
     for (const tr of results) {
         for (const ts of tr.suites) {
+            let localerr=[]
             for (const tg of ts.groups) {
                 for (const tc of tg.tests) {
                     const err = tc.error;
@@ -1514,17 +1515,19 @@ function getAnnotations(results, maxCount) {
                             continue;
                         }
                     }
-                    errors.push({
-                        testRunPaths: [tr.path],
-                        suiteName: ts.name,
-                        testName: tg.name ? `${tg.name} ► ${tc.name}` : tc.name,
-                        details: err.details,
-                        message: (_d = (_c = err.message) !== null && _c !== void 0 ? _c : parse_utils_1.getFirstNonEmptyLine(err.details)) !== null && _d !== void 0 ? _d : 'Test failed',
-                        path,
-                        line
-                    });
+                   localerr.push(`${tc.name}  ►  ${err.details} ► ${path} ${line}`)
+                   core.info(`${tc.name}  ►  ${err.details} ► ${path} ${line}`)
                 }
             }
+            errors.push({
+                testRunPaths: [tr.path],
+                suiteName: ts.name,
+                testName: ts.name,
+                details: localerr.join('\n'),
+                message: localerr.join('\n') || 'Test failed',
+                // path,
+                // line
+            });
         }
     }
     // Limit number of created annotations
@@ -1711,14 +1714,18 @@ function getTestRunsReport(testRuns, options) {
             const failed = tr.failed > 0 ? `${tr.failed}${markdown_utils_1.Icon.fail}` : '';
             const skipped = tr.skipped > 0 ? `${tr.skipped}${markdown_utils_1.Icon.skip}` : '';
             return [nameLink, passed, failed, skipped, time];
+        }).sort((a,b)=>{
+            if(b[2]=='' && a[2]!='') return -1
+            else if(a[2]!='' && b[2]=='') return 1
+            else return 0
         });
         const resultsTable = markdown_utils_1.table(['Report', 'Passed', 'Failed', 'Skipped', 'Time'], [markdown_utils_1.Align.Left, markdown_utils_1.Align.Right, markdown_utils_1.Align.Right, markdown_utils_1.Align.Right, markdown_utils_1.Align.Right], ...tableData);
         sections.push(resultsTable);
     }
-    if (options.onlySummary === false) {
-        const suitesReports = testRuns.map((tr, i) => getSuitesReport(tr, i, options)).flat();
-        sections.push(...suitesReports);
-    }
+    // if (options.onlySummary === false) {
+    //     const suitesReports = testRuns.map((tr, i) => getSuitesReport(tr, i, options)).flat();
+    //     sections.push(...suitesReports);
+    // }
     return sections;
 }
 function getSuitesReport(tr, runIndex, options) {
@@ -1731,7 +1738,7 @@ function getSuitesReport(tr, runIndex, options) {
     const headingLine2 = tr.tests > 0
         ? `**${tr.tests}** tests were completed in **${time}** with **${tr.passed}** passed, **${tr.failed}** failed and **${tr.skipped}** skipped.`
         : 'No tests found';
-    sections.push(headingLine2);
+    // sections.push(headingLine2);
     const suites = options.listSuites === 'failed' ? tr.failedSuites : tr.suites;
     if (suites.length > 0) {
         const suitesTable = markdown_utils_1.table(['Test suite', 'Passed', 'Failed', 'Skipped', 'Time'], [markdown_utils_1.Align.Left, markdown_utils_1.Align.Right, markdown_utils_1.Align.Right, markdown_utils_1.Align.Right, markdown_utils_1.Align.Right], ...suites.map((s, suiteIndex) => {
@@ -1745,7 +1752,7 @@ function getSuitesReport(tr, runIndex, options) {
             const skipped = s.skipped > 0 ? `${s.skipped}${markdown_utils_1.Icon.skip}` : '';
             return [tsNameLink, passed, failed, skipped, tsTime];
         }));
-        sections.push(suitesTable);
+        // sections.push(suitesTable);
     }
     if (options.listTests !== 'none') {
         const tests = suites.map((ts, suiteIndex) => getTestsReport(ts, runIndex, suiteIndex, options)).flat();
@@ -2197,8 +2204,8 @@ var Align;
     Align["None"] = "---";
 })(Align = exports.Align || (exports.Align = {}));
 exports.Icon = {
-    skip: '✖️',
-    success: '✔️',
+    skip: '💤',
+    success: '✅',
     fail: '❌' // ':x:'
 };
 function link(title, address) {
