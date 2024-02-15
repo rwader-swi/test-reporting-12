@@ -1515,8 +1515,8 @@ function getAnnotations(results, maxCount) {
                             continue;
                         }
                     }
-                   localerr.push(`${tc.name}  ►  ${err.details} ► ${path} ${line}`)
-                   core.info(`${tc.name}  ►  ${err.details} ► ${path} ${line}`)
+                   localerr.push(`${tc.name}  ►  ${err.details} ► ${path} line ${line}`)
+                   core.info(`${tc.name}  ►  ${err.details} ► ${path} line ${line}`)
                 }
             }
             errors.push({
@@ -1526,7 +1526,7 @@ function getAnnotations(results, maxCount) {
                 details: localerr.join('\n'),
                 message: localerr.join('\n') || 'Test failed',
                 path: tr.path,
-                line: ts.groups[0].tests[0].error.line
+                line: ((ts.groups)[0].tests)[0].error.line || 0
             });
         }
     }
