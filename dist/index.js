@@ -1516,7 +1516,6 @@ function getAnnotations(results, maxCount) {
                         }
                     }
                    localerr.push(`${tc.name}  ►  ${err.details} ► ${path} line ${line}`)
-                   core.info(`${tc.name}  ►  ${err.details} ► ${path} line ${line}`)
                 }
             }
             errors.push({
