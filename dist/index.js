@@ -1518,15 +1518,13 @@ function getAnnotations(results, maxCount) {
                             continue;
                         }
                     }
-                   localerr.push(`CASE ► ${tc.name} ❌ 
-                   TRACE ►  ${err.details} 
-                   PATH ► ${path} `)
+                   localerr.push(`CASE ► ${tc.name} ❌ \nTRACE ► ${err.details}`)
                 }
             }
             errors.push({
                 testRunPaths: [tr.path],
                 suiteName: ts.name,
-                testName: (ts.groups)[0].name,
+                testName: (ts.groups)[0].name || ts.name,
                 details: localerr.join('\n\n'),
                 message: localerr.join('\n\n') || 'Test failed',
                 path: tr.path,
@@ -1726,10 +1724,11 @@ function getTestRunsReport(testRuns, options) {
         const resultsTable = markdown_utils_1.table(['Report', 'Passed', 'Failed', 'Skipped', 'Time'], [markdown_utils_1.Align.Left, markdown_utils_1.Align.Right, markdown_utils_1.Align.Right, markdown_utils_1.Align.Right, markdown_utils_1.Align.Right], ...tableData);
         sections.push(resultsTable);
     }
-    // if (options.onlySummary === false) {
-    //     const suitesReports = testRuns.map((tr, i) => getSuitesReport(tr, i, options)).flat();
-    //     sections.push(...suitesReports);
-    // }
+    if (options.onlySummary === false) {
+        sections.push(`**Listing failed suites' details**`)
+        const suitesReports = testRuns.map((tr, i) => getSuitesReport(tr, i, options)).flat();
+        sections.push(...suitesReports);
+    }
     return sections;
 }
 function getSuitesReport(tr, runIndex, options) {
@@ -1742,7 +1741,7 @@ function getSuitesReport(tr, runIndex, options) {
     const headingLine2 = tr.tests > 0
         ? `**${tr.tests}** tests were completed in **${time}** with **${tr.passed}** passed, **${tr.failed}** failed and **${tr.skipped}** skipped.`
         : 'No tests found';
-    // sections.push(headingLine2);
+    sections.push(headingLine2);
     const suites = options.listSuites === 'failed' ? tr.failedSuites : tr.suites;
     if (suites.length > 0) {
         const suitesTable = markdown_utils_1.table(['Test suite', 'Passed', 'Failed', 'Skipped', 'Time'], [markdown_utils_1.Align.Left, markdown_utils_1.Align.Right, markdown_utils_1.Align.Right, markdown_utils_1.Align.Right, markdown_utils_1.Align.Right], ...suites.map((s, suiteIndex) => {
@@ -1756,7 +1755,7 @@ function getSuitesReport(tr, runIndex, options) {
             const skipped = s.skipped > 0 ? `${s.skipped}${markdown_utils_1.Icon.skip}` : '';
             return [tsNameLink, passed, failed, skipped, tsTime];
         }));
-        // sections.push(suitesTable);
+        sections.push(suitesTable);
     }
     if (options.listTests !== 'none') {
         const tests = suites.map((ts, suiteIndex) => getTestsReport(ts, runIndex, suiteIndex, options)).flat();
