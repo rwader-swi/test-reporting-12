@@ -1750,7 +1750,7 @@ function getSuitesReport(tr, runIndex, options) {
             const tsName = s.name;
             const skipLink = options.listTests === 'none' || (options.listTests === 'failed' && s.result !== 'failed');
             const tsAddr = options.baseUrl + makeSuiteSlug(runIndex, suiteIndex, options.slugPrefix).link;
-            const tsNameLink = skipLink ? tsName : markdown_utils_1.link(tsName, tsAddr);
+            const tsNameLink = skipLink ? tsName : markdown_utils_1.link(tsName, tsName);
             const passed = s.passed > 0 ? `${s.passed}${markdown_utils_1.Icon.success}` : '';
             const failed = s.failed > 0 ? `${s.failed}${markdown_utils_1.Icon.fail}` : '';
             const skipped = s.skipped > 0 ? `${s.skipped}${markdown_utils_1.Icon.skip}` : '';
