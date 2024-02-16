@@ -68,6 +68,12 @@ inputs:
       Detailed listing of test suites and test cases will be skipped.
     default: 'false'
     required: false
+  add-summary:
+    description: |
+      Allows you to choose if you want to add the summary.
+      In some cases users can use the output 'summary' of this action and modify it in their repo and put it as github summary. In that case they can set this option to false.
+    default: 'true'
+    required: false
   output-to:
     description: |
       The location to write the report to. Supported options:

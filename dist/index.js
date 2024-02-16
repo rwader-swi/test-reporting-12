@@ -257,6 +257,7 @@ class TestReporter {
         this.failOnError = core.getInput('fail-on-error', { required: true }) === 'true';
         this.workDirInput = core.getInput('working-directory', { required: false });
         this.onlySummary = core.getInput('only-summary', { required: false }) === 'true';
+        this.addSummary = core.getInput('add-summary', { required: false }) === 'true';
         this.outputTo = core.getInput('output-to', { required: false });
         this.commentBody = core.getInput('comment-body', {required: false});
         this.repository = core.getInput('repository', {required: false});
@@ -412,7 +413,9 @@ class TestReporter {
             // }
             // case 'step-summary': {
                 core.summary.addRaw(`# ${shortSummary}`);
-                core.summary.addRaw(summary);
+                if(this.addSummary) {
+                    core.summary.addRaw(summary);
+                }
                 await core.summary.write();
                 for (const annotation of annotations) {
                     let fn;
@@ -1515,15 +1518,17 @@ function getAnnotations(results, maxCount) {
                             continue;
                         }
                     }
-                   localerr.push(`${tc.name}  ►  ${err.details} ► ${path} line ${line}`)
+                   localerr.push(`CASE ► ${tc.name} ❌ 
+                   TRACE ►  ${err.details} 
+                   PATH ► ${path} `)
                 }
             }
             errors.push({
                 testRunPaths: [tr.path],
                 suiteName: ts.name,
-                testName: ts.name,
-                details: localerr.join('\n'),
-                message: localerr.join('\n') || 'Test failed',
+                testName: (ts.groups)[0].name,
+                details: localerr.join('\n\n'),
+                message: localerr.join('\n\n') || 'Test failed',
                 path: tr.path,
                 line: _b ? _b : 0
             });
@@ -1535,7 +1540,7 @@ function getAnnotations(results, maxCount) {
         const message = [
             'Failed test found in:',
             e.testRunPaths.map(p => `  ${p}`).join('\n'),
-            'Error:',
+            'Errors:',
             ident(markdown_utils_1.fixEol(e.message), '  ')
         ].join('\n');
         return enforceCheckRunLimits({
@@ -1543,7 +1548,7 @@ function getAnnotations(results, maxCount) {
             start_line: e.line,
             end_line: e.line,
             annotation_level: 'failure',
-            title: `${e.suiteName} ► ${e.testName}`,
+            title: `${e.testName}`,
             raw_details: markdown_utils_1.fixEol(e.details),
             message
         });
