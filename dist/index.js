@@ -1725,7 +1725,6 @@ function getTestRunsReport(testRuns, options) {
         sections.push(resultsTable);
     }
     if (options.onlySummary === false) {
-        sections.push(`**Listing failed suites' details**`)
         const suitesReports = testRuns.map((tr, i) => getSuitesReport(tr, i, options)).flat();
         sections.push(...suitesReports);
     }
