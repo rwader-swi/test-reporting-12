@@ -1735,12 +1735,14 @@ function getSuitesReport(tr, runIndex, options) {
     const trSlug = makeRunSlug(runIndex, options.slugPrefix);
     const nameLink = `<a id="${trSlug.id}" href="${options.baseUrl + trSlug.link}">${tr.path}</a>`;
     const icon = getResultIcon(tr.result);
-    sections.push(`## ${icon}\xa0${nameLink}`);
-    const time = markdown_utils_1.formatTime(tr.time);
-    const headingLine2 = tr.tests > 0
-        ? `**${tr.tests}** tests were completed in **${time}** with **${tr.passed}** passed, **${tr.failed}** failed and **${tr.skipped}** skipped.`
-        : 'No tests found';
-    sections.push(headingLine2);
+    if( options.listSuites === 'all' || tr.result == 'failed' ){
+        sections.push(`## ${icon}\xa0${nameLink}`);
+        const time = markdown_utils_1.formatTime(tr.time);
+        const headingLine2 = tr.tests > 0
+            ? `**${tr.tests}** tests were completed in **${time}** with **${tr.passed}** passed, **${tr.failed}** failed and **${tr.skipped}** skipped.`
+            : 'No tests found';
+        sections.push(headingLine2);
+    }
     const suites = options.listSuites === 'failed' ? tr.failedSuites : tr.suites;
     if (suites.length > 0) {
         const suitesTable = markdown_utils_1.table(['Test suite', 'Passed', 'Failed', 'Skipped', 'Time'], [markdown_utils_1.Align.Left, markdown_utils_1.Align.Right, markdown_utils_1.Align.Right, markdown_utils_1.Align.Right, markdown_utils_1.Align.Right], ...suites.map((s, suiteIndex) => {
