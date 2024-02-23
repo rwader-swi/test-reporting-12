@@ -1711,7 +1711,7 @@ function getTestRunsReport(testRuns, options) {
             const time = markdown_utils_1.formatTime(tr.time);
             const name = tr.path;
             const addr = options.baseUrl + makeRunSlug(runIndex, options.slugPrefix).link;
-            const nameLink = markdown_utils_1.link(name, addr);
+            const nameLink = markdown_utils_1.link(name, name);
             const passed = tr.passed > 0 ? `${tr.passed}${markdown_utils_1.Icon.success}` : '';
             const failed = tr.failed > 0 ? `${tr.failed}${markdown_utils_1.Icon.fail}` : '';
             const skipped = tr.skipped > 0 ? `${tr.skipped}${markdown_utils_1.Icon.skip}` : '';
@@ -1733,7 +1733,7 @@ function getTestRunsReport(testRuns, options) {
 function getSuitesReport(tr, runIndex, options) {
     const sections = [];
     const trSlug = makeRunSlug(runIndex, options.slugPrefix);
-    const nameLink = `<a id="${trSlug.id}" href="${options.baseUrl + trSlug.link}">${tr.path}</a>`;
+    const nameLink = `<a id="${trSlug.id}" href="${tr.path}">${tr.path}</a>`;
     const icon = getResultIcon(tr.result);
     if( options.listSuites === 'all' || tr.result == 'failed' ){
         sections.push(`## ${icon}\xa0${nameLink}`);
@@ -1750,7 +1750,7 @@ function getSuitesReport(tr, runIndex, options) {
             const tsName = s.name;
             const skipLink = options.listTests === 'none' || (options.listTests === 'failed' && s.result !== 'failed');
             const tsAddr = options.baseUrl + makeSuiteSlug(runIndex, suiteIndex, options.slugPrefix).link;
-            const tsNameLink = skipLink ? tsName : markdown_utils_1.link(tsName, tsName);
+            const tsNameLink = skipLink ? tsName : markdown_utils_1.link(tsName, tsAddr);
             const passed = s.passed > 0 ? `${s.passed}${markdown_utils_1.Icon.success}` : '';
             const failed = s.failed > 0 ? `${s.failed}${markdown_utils_1.Icon.fail}` : '';
             const skipped = s.skipped > 0 ? `${s.skipped}${markdown_utils_1.Icon.skip}` : '';
