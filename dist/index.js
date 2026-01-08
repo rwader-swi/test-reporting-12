@@ -440,16 +440,17 @@ class TestReporter {
                 // break;
             // }
         // }
-      if(this.issueNumber && this.issueNumber != "" && this.repository == github.context.repo.repo ){
-    const res = await this.octokit.issues.createComment({
-      issue_number: this.issueNumber,
-      owner: github.context.repo.owner,
-      repo: this.repository,
-      body: `${this.commentBody}
-      ${shortComment}`
-    })
-    core.info(`Create comment on PR : ${res.status}`)
-      }
+      core.info(` ${this.repository}  ${this.issueNumber} ${github.context.repo.repo} `)
+      // if(this.issueNumber && this.issueNumber != "" && this.repository == github.context.repo.repo ){
+        const res = await this.octokit.issues.createComment({
+          issue_number: this.issueNumber,
+          owner: github.context.repo.owner,
+          repo: this.repository,
+          body: `${this.commentBody}
+          ${shortComment}`
+        })
+        core.info(`Create comment on PR : ${res.status}`)
+      // }
     
         return results;
     }
@@ -37415,3 +37416,4 @@ module.exports = JSON.parse('[[[0,44],"disallowed_STD3_valid"],[[45,46],"valid"]
 /******/ })()
 ;
 //# sourceMappingURL=index.js.map
+
